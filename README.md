@@ -180,3 +180,59 @@ modules:
       valid_status_codes: []  # Defaults to 2xx
       follow_redirects: true
 ```
+
+## Installation
+1- Clone or copy this directory structure onto your server.
+
+2- Make sure Docker and Docker Compose are installed.
+
+3- Create the necessary directories for persistent data:
+
+```bash
+mkdir postgres-data prometheus_data grafana_data
+```
+4- Start the monitoring stack (Prometheus, Grafana, SNMP Exporter, Blackbox Exporter):
+ 
+ ```bash
+ docker-compose up -d
+```
+5- Start the Zabbix stack (Zabbix Server, Web Interface, and PostgreSQL):
+
+```bash
+docker-compose -f zabbix-docker-compose.yml up -d
+```
+
+### Access the Services
+
+* **Prometheus**: http://localhost:9090
+* **Grafana**: http://localhost:80
+* **Default login**: admin/admin
+* **Zabbix Web Interface**: http://localhost:8080
+* **Default login**: Admin/zabbix
+
+### Troubleshooting
+* To view the logs of a specific service, use the following command:
+‍‍‍```bash
+docker logs <container_name>
+```
+For example, to check the logs for the Prometheus container:
+```bash
+docker logs prometheus
+```
+* To restart all containers:
+
+```bash
+docker-compose down
+docker-compose up -d
+
+```
+### Customization
+Feel free to adjust the configuration files (**prometheus.yml, config.yml**, etc.) to match your environment. You can add more targets, configure alerting rules, or customize your Grafana dashboards.
+
+### Conclusion
+
+You now have a fully functioning monitoring stack with Zabbix, Prometheus, Grafana, SNMP Exporter, and Blackbox Exporter, all running in Docker containers. Customize the setup to monitor your specific network devices, servers, or applications.
+
+
+
+
