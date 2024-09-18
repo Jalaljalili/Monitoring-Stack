@@ -94,7 +94,7 @@ services:
       - '--config.file=/etc/blackboxexporter/config.yml'
     restart: unless-stopped
 ```
-2* zabbix-docker-compose.yml (**Zabbix Stack**)
+2- zabbix-docker-compose.yml (**Zabbix Stack**)
 This file contains the services for **Zabbix**, **Zabbix Web Interface**, and **PostgreSQL**.
 
 ```
