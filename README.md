@@ -153,3 +153,18 @@ services:
 networks:
   zabbix-net:
 ```
+**Prometheus Configuration** (prometheus.yml)
+
+```
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'snmp'
+    static_configs:
+      - targets: ['192.168.200.253:161'] # IP of SNMP device (e.g. switch)
+```
