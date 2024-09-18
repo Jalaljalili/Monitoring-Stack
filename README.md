@@ -168,3 +168,15 @@ scrape_configs:
     static_configs:
       - targets: ['192.168.200.253:161'] # IP of SNMP device (e.g. switch)
 ```
+**Blackbox Exporter Configuration** (config.yml)
+
+```
+modules:
+  http_2xx:
+    prober: http
+    timeout: 5s
+    http:
+      valid_http_versions: ['HTTP/1.1', 'HTTP/2']
+      valid_status_codes: []  # Defaults to 2xx
+      follow_redirects: true
+```
