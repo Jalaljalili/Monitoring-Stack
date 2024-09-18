@@ -211,8 +211,10 @@ docker-compose -f zabbix-docker-compose.yml up -d
 * **Default login**: Admin/zabbix
 
 ### Troubleshooting
+
 * To view the logs of a specific service, use the following command:
-‍‍‍```bash
+
+```bash
 docker logs <container_name>
 ```
 For example, to check the logs for the Prometheus container:
