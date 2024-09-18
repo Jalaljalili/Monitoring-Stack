@@ -66,7 +66,7 @@ services:
       - monitoring
     environment:
       - SNMP_EXPORTER_TARGETS=192.168.200.253:161  # Replace with your switch IP
-      - SNMP_EXPORTER_COMMUNITY=rubika
+      - SNMP_EXPORTER_COMMUNITY=private
     ports:
       - 9116:9116
 
