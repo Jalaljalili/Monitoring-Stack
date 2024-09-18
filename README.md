@@ -94,3 +94,62 @@ services:
       - '--config.file=/etc/blackboxexporter/config.yml'
     restart: unless-stopped
 ```
+2* zabbix-docker-compose.yml (**Zabbix Stack**)
+This file contains the services for **Zabbix**, **Zabbix Web Interface**, and **PostgreSQL**.
+
+```
+version: '3'
+
+services:
+  zabbix-server:
+    image: zabbix/zabbix-server-pgsql:latest
+    container_name: zabbix-server
+    restart: unless-stopped
+    networks:
+      - zabbix-net
+    ports:
+      - "10051:10051"
+    environment:
+      - DB_SERVER_HOST=db
+      - POSTGRES_DB=zabbix
+      - POSTGRES_USER=zabbix
+      - POSTGRES_PASSWORD=zabbix_pwd
+    volumes:
+      - ./zabbix_server.conf:/etc/zabbix/zabbix_server.conf
+    depends_on:
+      - db
+      - zabbix-web
+
+  zabbix-web:
+    image: zabbix/zabbix-web-nginx-pgsql:latest
+    container_name: zabbix-web
+    restart: unless-stopped
+    networks:
+      - zabbix-net
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_SERVER_HOST=db
+      - POSTGRES_DB=zabbix
+      - POSTGRES_USER=zabbix
+      - POSTGRES_PASSWORD=zabbix_pwd
+      - ZBX_SERVER_HOST=zabbix-server
+    depends_on:
+      - db
+
+  db:
+    image: postgres:alpine
+    container_name: zabbix-db
+    restart: unless-stopped
+    networks:
+      - zabbix-net
+    environment:
+      - POSTGRES_DB=zabbix
+      - POSTGRES_USER=zabbix
+      - POSTGRES_PASSWORD=zabbix_pwd
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+networks:
+  zabbix-net:
+```
