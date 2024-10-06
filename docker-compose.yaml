@@ -1,0 +1,81 @@
+version: '3'
+
+volumes:
+  prometheus_data:
+    driver: local
+
+  grafana_data:
+    driver: local
+
+  db_data:
+    driver: local
+
+  pgadmin_data:
+    driver: local
+
+  
+networks:
+  monitoring:
+
+services:
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    restart: unless-stopped
+    volumes:
+      - 'prometheus_data:/prometheus'
+      - './config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml'
+    networks:
+      - monitoring 
+    ports:
+      - 9090:9090
+
+  snmp-exporter:
+    container_name: snmp-exporter
+    image: prom/snmp-exporter
+    # volumes:
+    #   - './qnap-snmp/snmp.yml:/etc/snmp-exporter/snmp.yml'
+    restart: unless-stopped
+    networks:
+      - monitoring
+    environment:
+      - SNMP_EXPORTER_TARGETS=192.168.1.1:161  # Replace with your switch IP
+      - SNMP_EXPORTER_COMMUNITY=public
+    ports:
+      - 9116:9116
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    restart: unless-stopped
+    volumes:
+      - 'grafana_data:/var/lib/grafana'
+    networks:
+      - monitoring
+    ports:
+      - 80:3000
+
+  prom_mikrotik_exporter:
+    container_name: mikrotik_exporter
+    image: nshttpd/mikrotik-exporter:1.0.11
+    restart: unless-stopped
+    volumes:
+      - './config:/config'
+    env_file: .env
+    networks:
+      - monitoring
+    ports:
+      - 9436:9436
+
+  blackbox_exporter:
+    image: prom/blackbox-exporter:latest
+    container_name: blackbox_exporter
+    networks:
+      - monitoring
+    ports:
+      - 9115:9115
+    volumes:
+      - ./blackboxexporter/:/etc/blackboxexporter/
+    command:
+      - '--config.file=/etc/blackboxexporter/config.yml'
+    restart: unless-stopped
